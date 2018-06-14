@@ -208,6 +208,18 @@
 	% ========== %
 	\section{list}
 
+	\subsection{coté client}
+
+	Si l'utilisateur a entré "client", on vérifie qu'il a fourni les 3 arguments. Si ce n'est pas le cas la commande vsh envoie un message d'erreur. Si tout est bien indiqué on envoie la demande au serveur.
+
+	\subsection{coté serveur}
+
+	On demande à lire tous les fichiers du dossier archive sans indiquer son chemin	
+
+	\begin{lstlisting}
+	find archives -type f -exec basename {} \;
+	\end{lstlisting}
+
 	% =========== %
 	% MODE BROWSE %
 	% =========== %
@@ -262,7 +274,7 @@
 
 	\subsection{cat}
 
-	La commande \textbf{ls} cat affiche le contenu d'un fichier. Si aucune fichier n'est donné en paramètre, alors on affiche un message d'erreur.
+	La commande \textbf{cat} affiche le contenu d'un fichier. Si aucune fichier n'est donné en paramètre, alors on affiche un message d'erreur.
 
 	Côté serveur, on commence par trouver la ligne de l'archive décrivant le fichier dans l'archive. Pour celà, il nous faut deux informations:
 	\begin{itemize}  
@@ -323,7 +335,7 @@
 	Par la suite, nous aurons aussi besoin d’une fonction capable de transformer les permissions données sous forme entière (-rwxrwxrwx) en forme numérique (777). La fonction lit chaque caractère de la ligne de permission et offre des points à ceux qui ne sont pas « - ». Les variables user, group, et owner cumulent chacune les points qui les concernent et obtiennent une valeur définitive.
 
 	\begin{lstlisting}
-		p=$1
+	p=$1
 	user=0
 	group=0
 	owner=0
@@ -336,23 +348,22 @@
 
 	On utilise un read line pour parcourir le header et un grep pour connaitre la nature de l’élément de la ligne :
 	\begin{itemize}
-		\item Si on lit un dossier (directory), ce dossier devient notre dossier courant (current_dir), et on le crée s’il n’existe pas déjà.
-		\item Si on lit un sous-dossier, on l’associe à la variable sub_dir, et on le crée en respectant son adresse. 
-		\begin{lstlisting}
-		sub_dir_path="$current_dir/$sub_dir"
-		mkdir -p $sub_dir_path	
-		\end{lstlisting}
-		On lui attribue les permissions qui lui reviennent grace à la fonction décrite plus haut en passant en argument les droits du fichier.
-		\item Si on lit un fichier, on sépare les informations de la ligne en parties  (définies par les espaces):
-		\begin{itemize}
-			\item Le nom, qui nous permet de crée le fichier.
-			\begin{lstlisting}
-			file_path="$current_dir/${parts[0]}"
-			touch $file_path
-			\end{lstlisting}			
-			\item Les permissions, que nous traduisons grâce à notre fonction, puis que nous attribuons au fichier.
-			\item S’il y a 5 parties, c’est que le fichier contient du texte. Dans ce cas on lit les 2 dernières parties. Elles décrivent où se situent le texte et les lignes qu’il contient.
-		\end{itemize}
+%		\item Si on lit un dossier (directory), ce dossier devient notre dossier courant (current_dir), et on le crée s’il n’existe pas déjà.
+%		\item Si on lit un sous-dossier, on l’associe à la variable sub_dir, et on le crée en respectant son adresse. 
+%		\item \begin{lstlisting}
+%		sub_dir_path="$current_dir/$sub_dir"
+%		mkdir -p $sub_dir_path	
+%				\end{lstlisting}
+%		\item On lui attribue les permissions qui lui reviennent grace à la fonction décrite plus haut en passant en argument les droits du fichier.
+%		\item Si on lit un fichier, on sépare les informations de la ligne en parties  (définies par les espaces):
+%%			\item Le nom, qui nous permet de crée le fichier.
+%			\item \begin{lstlisting}
+%			file_path="$current_dir/${parts[0]}"
+%			touch $file_path
+%					\end{lstlisting}			
+%			\item Les permissions, que nous traduisons grâce à notre fonction, puis que nous attribuons au fichier.
+%			\item S’il y a 5 parties, c’est que le fichier contient du texte. Dans ce cas on lit les 2 dernières parties. Elles décrivent où se situent le texte et les lignes qu’il contient.
+%			\end{itemize}
 	\end{itemize}
 
 
